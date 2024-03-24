@@ -14,7 +14,7 @@ services:
       - pg_data:/var/lib/postgresql/data
   backend:
     container_name: kitty_backend
-    image: bogdartem/kitty_backend
+    image: bogdartem/kittygram_backend
     env_file: .env
     volumes:
       - static:/backend_static
@@ -24,13 +24,13 @@ services:
   frontend:
     container_name: kitty_frontend
     env_file: .env
-    image: bogdartem/kitty_frontend
+    image: bogdartem/kittygram_frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
   gateway:
     container_name: kitty_gateway
-    image: bogdartem/kitty_gateway
+    image: bogdartem/kittygram_gateway
     env_file: .env
     ports:
       - 9000:80
