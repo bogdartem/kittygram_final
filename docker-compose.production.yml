@@ -7,13 +7,13 @@ volumes:
 
 services:
   db:
-    container_name: kitty_db
+    #container_name: kitty_db
     image: postgres:13.10
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
-    container_name: kitty_backend
+    #container_name: kitty_backend
     image: bogdartem/kittygram_backend
     env_file: .env
     volumes:
@@ -22,14 +22,14 @@ services:
     depends_on:
       - db
   frontend:
-    container_name: kitty_frontend
+    #container_name: kitty_frontend
     env_file: .env
     image: bogdartem/kittygram_frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
   gateway:
-    container_name: kitty_gateway
+    #container_name: kitty_gateway
     image: bogdartem/kittygram_gateway
     env_file: .env
     ports:
