@@ -1,0 +1,14 @@
+venv
+.git
+db.sqlite3
+.idea
+vscode
+.env
+.vscode
+README.md
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
