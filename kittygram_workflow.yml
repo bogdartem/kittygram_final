@@ -18,12 +18,16 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    strategy:
+      matrix:
+        python-version: ["pypy3.9", "pypy3.10", "3.9", "3.10", "3.11", "3.12"]
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
@@ -60,7 +64,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: bogdartem/kittygram_backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_backend:latest
   frontend_tests:
     runs-on: ubuntu-latest
 
@@ -99,7 +103,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: bogdartem/kittygram_frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_frontend:latest
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -118,7 +122,7 @@ jobs:
         with:
           context: ./nginx/
           push: true
-          tags: bogdartem/kittygram_gateway:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_gateway:latest
   deploy:
     runs-on: ubuntu-latest
     needs:
@@ -153,8 +157,8 @@ jobs:
           sudo docker compose -f docker-compose.production.yml up -d
           # migrations n stat
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
+
   send_message:
     runs-on: ubuntu-latest
     needs: deploy
@@ -164,4 +168,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Успешно проведён деплой проекта Kittygram-final.
+        message: ${{ github.actor }} успешно провёл деплой проекта Kittygram с комментарием ${{ github.event.commits[0].message }}. Подробнее по ссылке https://github.com/${{ github.repository }}/commit/${{ github.sha }} 

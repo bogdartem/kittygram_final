@@ -1,4 +1,5 @@
 import os
+from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -7,7 +8,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', '')
+RANDOM_SECRET_KEY = get_random_secret_key()
+SECRET_KEY = os.getenv('SECRET_KEY', 'RANDOM_SECRET_KEY')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
@@ -94,7 +96,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'collected_static'
+STATIC_ROOT = '/backend_static/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
