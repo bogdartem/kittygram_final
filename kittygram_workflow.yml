@@ -18,16 +18,16 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    strategy:
-      matrix:
-        python-version: ["pypy3.9", "pypy3.10", "3.9", "3.10", "3.11"]
+#    strategy:
+#      matrix:
+#        python-version: ["pypy3.9", "pypy3.10", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.9 #$ {{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
